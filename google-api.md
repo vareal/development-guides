@@ -1,4 +1,4 @@
-##Preparation
+## Preparation
 ```
 create console app(https://console.developers.google.com/).
 get client id and client secret
@@ -7,12 +7,12 @@ rails g model Token access_token:string refresh_token:string expires_at:datetime
 
 rails db:migrate
 ```
-##gem file add this gem
+## gem file add this gem
 ```
 gem 'google-api-client'
 gem 'omniauth-google-oauth2'
 ```
-##config/initalizers/omniauth.rb
+## config/initalizers/omniauth.rb
 ```
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {
@@ -21,7 +21,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   # permission application require
 end
 ```
-##app/models/token.rb
+## app/models/token.rb
 ```
 require 'net/http'
 require 'json'
@@ -57,17 +57,17 @@ class Token < ApplicationRecord
   end
 end
 ```
-##routes.rb
+## routes.rb
 ```
 Rails.application.routes.draw do
   get 'dashboard/index'
   root 'sessions#index'
   resources :session, only: :index
-  get "/auth/:provider/callback" => 'sessions#create'
+  match "/auth/:provider/callback", to: "google_accounts#create", via: :get
 end
 ```
 
-##app/controllers/sessions_controller.rb
+## app/controllers/sessions_controller.rb
 ```
 class SessionsController < ApplicationController
   def create
@@ -80,7 +80,7 @@ class SessionsController < ApplicationController
   end
 end
 ```
-##app/views/sesions/create.html.erb
+## app/views/sesions/create.html.erb
 ```
 <%= @google_token.access_token %>
 ```
@@ -98,7 +98,7 @@ end
     - google server return access_token.
     - application use this access_token to make calls to a Google API to get data(gmail in this example).
   ```
-##add to app/models/token.rb
+## add to app/models/token.rb
   ```
   def get_messages
     service = Google::Apis::GmailV1::GmailService.new
