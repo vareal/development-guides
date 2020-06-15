@@ -3,7 +3,7 @@
 create console app(https://console.developers.google.com/).
 get client id and client secret
 
-rails g model Token access_token:string refresh_token:string expires_at:datetime uid:string
+rails g model GoogleToken access_token:string refresh_token:string expires_at:datetime uid:string
 
 rails db:migrate
 ```
@@ -21,12 +21,13 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   # permission application require
 end
 ```
-## app/models/token.rb
+## app/models/google_token.rb
 ```
 require 'net/http'
 require 'json'
+require 'google/apis/gmail_v1'
 
-class Token < ApplicationRecord
+class GoogleToken < ApplicationRecord
   def to_params
     {'refresh_token' => refresh_token,
     'client_id' => ENV['GOOGLE_CLIENT_ID'],
@@ -60,16 +61,14 @@ end
 ## routes.rb
 ```
 Rails.application.routes.draw do
-  get 'dashboard/index'
-  root 'sessions#index'
-  resources :session, only: :index
+  resource :google_account, only: :show
   match "/auth/:provider/callback", to: "google_accounts#create", via: :get
 end
 ```
 
-## app/controllers/sessions_controller.rb
+## app/controllers/google_accounts_controller.rb
 ```
-class SessionsController < ApplicationController
+class GoogleAccountsController < ApplicationController
   def create
     auth = request.env['omniauth.auth']
     @google_token = Token.find_or_create_by(uid: auth['uid']) do |token|
@@ -80,7 +79,11 @@ class SessionsController < ApplicationController
   end
 end
 ```
-## app/views/sesions/create.html.erb
+## app/views/google_accounts/show.html.erb
+```
+<%= link_to "Authenticate with Google!", '/auth/google_oauth2' %>
+```
+## app/views/google_accounts/create.html.erb
 ```
 <%= @google_token.access_token %>
 ```
@@ -92,13 +95,12 @@ end
     with parameters(google_client_id, google_client_scret, scope, ..)
   step 2: User confirm grant permission in prompt
   step 3: Handle the OAuth 2.0 server response
-    - After receive response, google response callback url(http://localhost:3000/auth/google_oauth2/callback)
-      include an authorization code 
+    - After receive response, google response callback url(http://localhost:3000/auth/google_oauth2/callback) include an authorization code 
     - web server call the https://oauth2.googleapis.com/token endpoint and set authorization code parameter
     - google server return access_token.
     - application use this access_token to make calls to a Google API to get data(gmail in this example).
   ```
-## add to app/models/token.rb
+## add to app/models/google_token.rb
   ```
   def get_messages
     service = Google::Apis::GmailV1::GmailService.new
