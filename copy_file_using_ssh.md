@@ -14,3 +14,4 @@ Example:
 ```ruby
 sudo scp -i /home/hien/Documents/pg_production.pem ubuntu@[ip address]:/webapp/mydomain.com/shared/log/sidekiq.log /home/hien/Desktop
 ```
+*note:* -i is for the identity_file
