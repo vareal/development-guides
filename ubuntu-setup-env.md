@@ -38,11 +38,6 @@ rbenv rehash
 gem install rails
 rbenv rehash
 ```
-## Install MySQL
-```
-sudo apt-get install mysql-server mysql-client libmysqlclient-dev
-```
-/Note/: If get any prompt, just press [Enter] to continue.
 
 ## Install PostgreSQL
 ```
@@ -62,6 +57,7 @@ git config --global user.email "YOUR@EMAIL.com"
 ssh-keygen -t rsa -b 4096 -C "YOUR@EMAIL.com"
 ```
 /Note/: If get any prompt, just press [Enter] to continue.
+
 ## Config to connect to MySQL Server without sudo permission (If needed)
 ```
 sudo mysql -uroot
