@@ -28,8 +28,8 @@ git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.zshrc
 exec $SHELL
 
-rbenv install 2.6.6
-rbenv global 2.6.6
+rbenv install 2.7.3
+rbenv global 2.7.3
 
 echo "gem: --no-document" >> ~/.gemrc
 
