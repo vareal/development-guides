@@ -45,7 +45,7 @@ sudo apt install postgresql postgresql-contrib
 
 ## Install NodeJS
 ```
-curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 ## Config Git
